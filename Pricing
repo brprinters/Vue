@@ -1,0 +1,57 @@
+Set Field [ KY_JobLog::CreateBillingFO_UnitPrice; Round (
+  Case (
+    KY_JobLog::Type_Delivery = "Bookstore/WHSE - BW" and KY_JobLog::CreatePart_BW_PageCount > 0 and KY_JobLog::CreatePart_BW_PageCount_MCG_INV > 0; KY_JobLog::CreatePart_BW_PageCount_MCG_INV * KY_JobLog::Billing_ClickRate_MCG;
+    KY_JobLog::Type_Delivery = "Comp/Desk Copy" and KY_JobLog::CreatePart_BW_PageCount > 0 and KY_JobLog::CreatePart_BW_PageCount_MCG_INV > 0; KY_JobLog::CreatePart_BW_PageCount_MCG_INV * KY_JobLog::Billing_ClickRate_MCG;
+    KY_JobLog::Type_Delivery = "Comp/Desk Copy" and KY_JobLog::CreatePart_Color_Txt_PageCount > 0 and KY_JobLog::CreatePart_Color_Txt_PageCount_MCG_INV > 0; KY_JobLog::CreatePart_Color_Txt_PageCount_MCG_INV * KY_JobLog::Billing_ClickRate_MCG;
+    KY_JobLog::Type_Delivery = "Bookstore/WHSE - Clr" and KY_JobLog::CreatePart_Color_Txt_PageCount > 0 and KY_JobLog::CreatePart_Color_Txt_PageCount_MCG_INV > 0; KY_JobLog::CreatePart_Color_Txt_PageCount_MCG_INV * KY_JobLog::Billing_ClickRate_MCG;
+    -10000
+  )
+  +
+  Case (
+    KY_JobLog::CreatePart_Color_Cvr_PageCount = 1 and KY_JobLog::AccessCodes_BkCvr = "Codes_No"; .42;
+    KY_JobLog::CreatePart_Color_Cvr_PageCount = 1 and KY_JobLog::AccessCodes_BkCvr = "Codes_Yes"; .52;
+    KY_JobLog::CreatePart_Color_Cvr_PageCount > 1 and KY_JobLog::AccessCodes_BkCvr = "Codes_Yes"; .52;
+    KY_JobLog::CreatePart_Color_Cvr_PageCount = 2 and KY_JobLog::AccessCodes_BkCvr = "Codes_No"; .72;
+    0
+  )
+  +
+  Case (
+    ( PatternCount ( $$BinderySteps; "3 Hole") or PatternCount ( $$BinderySteps; "Drill")); .4;
+    0
+  )
+  +
+  Case (
+    PatternCount ( $$BinderySteps; "Shrinkwrap"); .3;
+    0
+  )
+  +
+  Case (
+    (not IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$BinderySteps; "Spiral") and KY_JobLog::CreatePart_BW_PageCount ≥ 1 and KY_JobLog::CreatePart_BW_PageCount ≤ 300 ; 1.2;
+    (not IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$BinderySteps; "Spiral") and KY_JobLog::CreatePart_BW_PageCount ≥ 301 and KY_JobLog::CreatePart_BW_PageCount ≤ 450 ; 1.9;
+    (not IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$BinderySteps; "Spiral") and KY_JobLog::CreatePart_BW_PageCount ≥ 451 and KY_JobLog::CreatePart_BW_PageCount ≤ 950 ; 3;
+    (not IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$BinderySteps; "Spiral") and KY_JobLog::CreatePart_BW_PageCount ≥ 951 and KY_JobLog::CreatePart_BW_PageCount ≤ 1300 ; 5;
+    (not IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$BinderySteps; "Spiral") and KY_JobLog::CreatePart_BW_PageCount ≥ 1301 and KY_JobLog::CreatePart_BW_PageCount ≤ 10000 ; 7.5;
+    (IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and not IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$BinderySteps; "Spiral") and KY_JobLog::CreatePart_Color_Txt_PageCount ≥ 1 and KY_JobLog::CreatePart_Color_Txt_PageCount ≤ 300 ; 1.2;
+    (IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and not IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$BinderySteps; "Spiral") and KY_JobLog::CreatePart_Color_Txt_PageCount ≥ 301 and KY_JobLog::CreatePart_Color_Txt_PageCount ≤ 450 ; 1.9;
+    (IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and not IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$BinderySteps; "Spiral") and KY_JobLog::CreatePart_Color_Txt_PageCount ≥ 451 and KY_JobLog::CreatePart_Color_Txt_PageCount ≤ 950 ; 3;
+    (IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and not IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$BinderySteps; "Spiral") and KY_JobLog::CreatePart_Color_Txt_PageCount ≥ 951 and KY_JobLog::CreatePart_Color_Txt_PageCount ≤ 1300 ; 5;
+    (IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and not IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$BinderySteps; "Spiral") and KY_JobLog::CreatePart_Color_Txt_PageCount ≥ 1301 and KY_JobLog::CreatePart_Color_Txt_PageCount ≤ 10000 ; 7.5;
+    0
+  )
+  +
+  Case (
+    (not IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$PaperPerf; "Yes"); KY_JobLog::CreatePart_BW_PageCount * .003;
+    (IsEmpty (KY_JobLog::CreatePart_BW__BRPNCreated) and not IsEmpty (KY_JobLog::CreatePart_Color_Txt__BRPNCreated)) and PatternCount ( $$PaperPerf; "Yes"); KY_JobLog::CreatePart_Color_Txt_PageCount * .003;
+    0
+  )
+  +
+  Case (
+    KY_JobLog::AccessCodes_BkCvr = "Codes_Yes"; .15;
+    0
+  )
+]
+
+Set Field [ KY_JobLog::CreateBillingFO_UnitPrice_Auto_Log; Trim ("") ]
+Commit Records/Requests [ No dialog ]
+Else
+# Send email notification
