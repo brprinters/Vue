@@ -1,3 +1,24 @@
+# Set click price from pricing table
+#
+# BW
+If [ 
+    (KY_JobLog::Type_Delivery = "Bookstore/WHSE - BW" and Count (KY_JobLog | KY_JobLog_PriceTable_BW::_One.calc) = 1) or
+    (KY_JobLog::Type_Delivery = "Comp/Desk Copy" and Count (KY_JobLog | KY_JobLog_PriceTable_BW::_One.calc) = 1)
+]
+    Set Field [ KY_JobLog::Billing_ClickRate_MCG; KY_JobLog | KY_JobLog_PriceTable_BW::ClickPrice ]
+End If
+#
+# CLR
+If [ 
+    (KY_JobLog::Type_Delivery = "Bookstore/WHSE - CLR" and Count (KY_JobLog | KY_JobLog_PriceTable_CLR::_One.calc) = 1) or
+    (KY_JobLog::Type_Delivery = "Comp/Desk Copy" and Count (KY_JobLog | KY_JobLog_PriceTable_CLR::_One.calc) = 1)
+]
+    Set Field [ KY_JobLog::Billing_ClickRate_MCG; KY_JobLog | KY_JobLog_PriceTable_CLR::ClickPrice ]
+End If
+Commit Records/Requests [ No dialog ]
+
+#Set Pricing
+
 Set Field [ KY_JobLog::CreateBillingFO_UnitPrice; Round (
   Case (
     KY_JobLog::Type_Delivery = "Bookstore/WHSE - BW" and KY_JobLog::CreatePart_BW_PageCount > 0 and KY_JobLog::CreatePart_BW_PageCount_MCG_INV > 0; KY_JobLog::CreatePart_BW_PageCount_MCG_INV * KY_JobLog::Billing_ClickRate_MCG;
